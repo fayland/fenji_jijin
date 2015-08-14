@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+<meta http-equiv="X-UA-Compatible" content="Chrome=1,IE=edge" />
+</head>
+<body>
+
+<!-- <th>母鸡名称</th> -->
+
+<table id='data' border='1' width="100%">
+<thead>
+<tr>
+    <th>A代码</th><th>A</th><th>A价</th><th>A涨幅</th><th>A成交</th>
+    <th>B代码</th><th>B</th><th>B价</th><th>B涨幅</th><th>X涨幅</th><th>B成交</th>
+    <th>合并价</th>
+    <th>净值估</th><th>合并溢</th>
+    <th>估算1</th><th>溢价1</th>
+    <th>母基</th><th>母鸡净</th>
+    <th>指数</th><th>指数名</th><th>指数涨幅</th>
+    <th>价杠杆</th>
+</tr>
+</thead>
+<tbody>
+
+</tbody>
+</table>
+
+<ul>
+    <li>X涨幅 - 抹平溢价可以涨</li>
+</ul>
+
+<script src="jquery.min.js"></script>
+<script>
+$.ajaxSetup({
+    cache: true
+});
+var list = [
+    ['sz150205', 'sz150206', 'sz399973', '160630'],
+    ['sz150181', 'sz150182', 'sz399967', '161024'],
+    ['sz150186', 'sz150187', 'sz399967', '163115'],
+    ['sz150209', 'sz150210', 'sz399974', '161026'],
+    ['sz150194', 'sz150195', 'sz399970', '161025'],
+    ['sz150085', 'sz150086', 'sz399005', '163111'],
+    ['sz150106', 'sz150107', 'sz399005', '161118'],
+    ['sz150152', 'sz150153', 'sz399006', '161022'],
+    ['sz150179', 'sz150180', 'sz399935', '160626'],
+    ['sz150130', 'sz150131', 'sz399394', '160219']
+];
+function render() {
+    var xxx = $.map(list, function(n){
+       return n;
+    });
+    xxx = $.grep(xxx, function(n) {
+        return (n.indexOf('sz') > -1 || n.indexOf('sh') > -1);
+    });
+    xxx = $.unique(xxx);
+    var url = "http://hq.sinajs.cn/list=" + xxx.join(',');
+    $.getScript( url, function() {
+        var tbody = '';
+        $.each(list, function(i, row) {
+            var xA = eval("hq_str_" + row[0]);
+            var xB = eval("hq_str_" + row[1]);
+            var xM = eval("hq_str_" + row[2]);
+            var dataA = xA.split(',');
+            var dataB = xB.split(',');
+            var dataM = xM.split(',');
+            var dataF = getFundNetValue(row[3]);
+
+            // 合并价格
+            var hb_price = Math.floor(10000 * ( parseFloat(dataA[3]) + parseFloat(dataB[3]) ) / 2) / 10000;
+            var zs_zhangfu = Math.floor(10000 * (dataM[3] - dataM[2]) / dataM[2]) / 100; // 指数涨幅
+
+            var jingzhi_gusuan = '-'; // 净值估算
+            var hebing_yijia = '-';   // 合并溢价
+            var jiage_ganggan = '-'; // 价格杠杆
+            if (dataF && dataF.length) {
+                jingzhi_gusuan = parseFloat(dataF[2]) * (1 + zs_zhangfu / 100); // 0.95 仓位
+                hebing_yijia = Math.floor(10000 * (hb_price - jingzhi_gusuan) / hb_price) / 100;
+
+                jingzhi_gusuan = Math.floor(10000 * jingzhi_gusuan) / 10000;
+
+                // （母基金净值/B份额价格）* 初始杠杆
+                jiage_ganggan = Math.floor( 1000 * (dataF[2] / dataB[3]) * 2 ) / 1000; // A:B = 5:5
+            }
+
+            tbody += '<tr><td>' + displayCode(row[0]) + '</td><td>' + dataA[0] + '</td><td>' + dataA[3] + '</td><td>' + displayPct(Math.floor(10000 * (dataA[3] - dataA[2]) / dataA[2]) / 100) + '</td><td>' + Math.floor(dataA[9] / 10000) + '</td>';
+
+            tbody += '<td>' + displayCode(row[1]) + '</td><td>' + dataB[0] + '</td><td>' + dataB[3] + '</td><td>' + displayPct(Math.floor(10000 * (dataB[3] - dataB[2]) / dataB[2]) / 100) + '</td>';
+
+            // 抹平溢价可以涨
+            if (! isNaN(jingzhi_gusuan)) {
+                // 2 * 母 - A VS 开盘价
+                var tmp = Math.floor( 10000 * ( (2 * jingzhi_gusuan - dataA[3]) - dataB[2] ) / dataB[2] ) / 100;
+                tbody += '<td>' + displayPct(tmp) + '</td>';
+            } else {
+                tbody += '<td>-</td>'
+            }
+
+            tbody += '<td>' + Math.floor(dataB[9] / 10000) + '</td>';
+
+            tbody += '<td>' + hb_price + '</td><td>' + jingzhi_gusuan + '</td><td>' + displayPct(hebing_yijia) + '</td>';
+
+            var gs1 = getFundGS1Value(row[3]);
+            if (! isNaN(gs1)) {
+                var yijia = Math.floor(10000 * (hb_price - gs1) / hb_price) / 100;
+                tbody += '<td><a href="http://fund.fund123.cn/html/' + row[3] + '/index.html" target="_blank">' + gs1 + '</a></td><td>' + displayPct(yijia) + '</td>';
+            } else {
+                tbody += '<td>-</td><td>-</td>';
+            }
+
+            // <td>' + (dataF ? displayName(dataF[1]) : '') + '</td>
+            tbody += '<td>' + row[3] + '</td><td>' + (dataF ? dataF[2] : '') + '</td>';
+
+            tbody += '<td>' + displayCode(row[2]) + '</td><td>' + dataM[0] + '</td><td>' + displayPct(zs_zhangfu) + '</td>';
+
+            tbody += '<td>' + jiage_ganggan + '</td>';
+
+            tbody += '</tr>';
+        });
+
+        $('#data > tbody').html(tbody);
+    });
+}
+
+function displayCode(code) {
+    if (! code) return '-';
+    return code.replace('sz', '').replace('sh', '');
+}
+function displayPct(pct) {
+    if (pct == '-') return '-';
+    if (pct > 0) {
+        return '<span style="color:red">' + pct + '%</span>';
+    } else if (pct < 0) {
+        return '<span style="color:green">' + pct + '%</span>';
+    } else {
+        return pct + '%';
+    }
+}
+function displayName(name) {
+    return name.replace('指数分级', '')
+}
+
+function setFundGS1value(code) {
+    var url = "http://hqqd.fund123.cn/HQ_EV_" + code + '.js';
+    $.getScript(url, function() {
+        fdata = eval("HQ_EV_" + code);
+        localStorage.setItem('g1_' + code, fdata[5]);
+    });
+}
+
+function getFundGS1Value(code) {
+    return localStorage.getItem('g1_' + code);
+}
+
+function setFundGS2value(code) {
+    $.load('http://fund.eastmoney.com/' + code + '.html', function(html) {
+        var xxx = $(html).find('#statuspzgz').find('.red').text();
+        console.log(xxx);
+        // localStorage.setItem('g2_' + code, fdata[5]);
+    });
+}
+
+function getFundGS2Value(code) {
+    return localStorage.getItem('g2_' + code);
+}
+
+function getFundNetValue(code) {
+    var fdata = localStorage.getItem('m_' + code);
+    if (fdata) fdata = JSON.parse(fdata);
+    var require_fetch = 0;
+    if (! fdata) require_fetch = 1;
+    if (fdata && $.now() - fdata[-1] > 3600 * 1000) require_fetch = 1;
+    if (require_fetch) {
+        var url = "http://hqqd.fund123.cn/HQ_NV_" + code + '.js';
+        $.getScript(url, function() {
+            fdata = eval("HQ_NV_" + code);
+            fdata.push( $.now() );
+            localStorage.setItem('m_' + code, JSON.stringify(fdata));
+        });
+        return [];
+    }
+    return fdata;
+}
+
+$(document).ready(function() {
+    render();
+    window.setInterval(render, 5000);
+
+    $.each(list, function(i, row) {
+        var code = row[3];
+        window.setInterval(function() {
+            setFundGS1value(code);
+            // setFundGS2value(code);
+        }, 10000); // every 10 seconds
+    });
+});
+</script>
+
+</body>
+</html>
