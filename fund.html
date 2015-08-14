@@ -187,7 +187,7 @@ function getFundNetValue(code) {
         var url = "http://hqqd.fund123.cn/HQ_NV_" + code + '.js';
         $.getScript(url, function() {
             fdata = eval("HQ_NV_" + code);
-            if ( parseFloat(dataF[2]) > 0 ) {
+            if ( parseFloat(fdata[2]) > 0 ) {
                 fdata.push( $.now() );
                 localStorage.setItem('m_' + code, JSON.stringify(fdata));
             }
