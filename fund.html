@@ -182,7 +182,7 @@ function getFundNetValue(code) {
     if (fdata) fdata = JSON.parse(fdata);
     var require_fetch = 0;
     if (! fdata) require_fetch = 1;
-    if (fdata && $.now() - fdata[-1] > 3600 * 1000) require_fetch = 1;
+    if (fdata && $.now() - fdata[fdata.length-1] > 3600 * 1000) require_fetch = 1;
     if (require_fetch) {
         var url = "http://hqqd.fund123.cn/HQ_NV_" + code + '.js';
         $.getScript(url, function() {
