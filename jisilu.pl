@@ -29,6 +29,8 @@ while (1) {
         open(my $fh, '>', "$Bin/jisilu.json");
         print $fh $res->content;
         close($fh);
+    } else {
+        die;
     }
 
     sleep 20;

@@ -6,10 +6,10 @@
 </head>
 <body>
 
-<table id='data' border='1' width="109%">
+<table id='data' border='1' width="120%">
 <thead>
 <tr>
-    <th>A代码</th><th>A</th><th>A价</th><th>A涨幅</th>
+    <th>A代码</th> <!-- <th>A</th> --> <th>A价</th><th>A涨幅</th>
     <th>B代码</th><th>B</th><th>B价</th><th>B涨幅</th><th>X涨幅</th> <!-- <th>Y涨幅</th> -->
     <th>合并价</th>
     <th>净值估</th><th>合并溢</th>
@@ -17,7 +17,9 @@
     <th>估算1</th><th>溢价1</th>
     <th>母基</th><!-- <th>母鸡名称</th> --><th>母鸡净</th>
     <th>指数</th><th>指数名</th><th>指涨幅</th>
-    <th>价杠杆</th><th>A成交</th><th>B成交</th>
+    <th>价杠杆</th><th>净杠杆</th><th>A成交</th><th>B成交</th>
+
+    <th>B净值</th>
 </tr>
 </thead>
 <tbody>
@@ -49,6 +51,8 @@ var list = [
     ['sz150173', 'sz150174', 'sh000998', '165522'],
     ['sz150203', 'sz150204', 'sz399971', '160629'],
     ['sz150130', 'sz150131', 'sz399394', '160219'],
+    ['sz150196', 'sz150197', 'sz399395', '160221'],
+    ['sz150171', 'sz150172', 'sz399707', '163113'],
     ['sz150315', 'sz150316', 'sz399803', '161031'],
     ['sz150307', 'sz150308', 'sz399804', '161030'],
     ['sz150211', 'sz150212', 'sz399976', '161028']
@@ -71,6 +75,9 @@ function render() {
             var dataM = xM.split(',');
             var dataF = getFundNetValue(row[3]);
 
+            var cleanB = row[1].replace('sz', '');
+            var netB  = getFundNetValue(cleanB);
+
             // 合并价格
             var hb_price = Math.floor(10000 * ( parseFloat(dataA[3]) + parseFloat(dataB[3]) ) / 2) / 10000;
             var zs_zhangfu = Math.floor(10000 * (dataM[3] - dataM[2]) / dataM[2]) / 100; // 指数涨幅
@@ -78,6 +85,7 @@ function render() {
             var jingzhi_gusuan = '-'; // 净值估算
             var hebing_yijia = '-';   // 合并溢价
             var jiage_ganggan = '-'; // 价格杠杆
+            var jingzhi_ganggan = '-'; // 净值杠杆
             if (dataF && dataF.length) {
                 jingzhi_gusuan = parseFloat(dataF[2]) * (1 + zs_zhangfu / 100); // 0.95 仓位
                 hebing_yijia = Math.floor(10000 * (hb_price - jingzhi_gusuan) / hb_price) / 100;
@@ -86,9 +94,14 @@ function render() {
 
                 // （母基金净值/B份额价格）* 初始杠杆
                 jiage_ganggan = Math.floor( 1000 * (dataF[2] / dataB[3]) * 2 ) / 1000; // A:B = 5:5
+
+                // (母基金净值/B份额净值)×初始杠杆
+                jingzhi_ganggan = Math.floor( 1000 * (dataF[2] / netB[2]) * 2 ) / 1000; // A:B = 5:5
             }
 
-            tbody += '<tr><td>' + displayCode(row[0]) + '</td><td>' + dataA[0] + '</td><td>' + dataA[3] + '</td><td>' + displayPct(Math.floor(10000 * (dataA[3] - dataA[2]) / dataA[2]) / 100) + '</td>';
+            tbody += '<tr><td>' + displayCode(row[0]) + '</td>';
+            // tbody += '<td>' + dataA[0] + '</td>';
+            tbody += '<td>' + dataA[3] + '</td><td>' + displayPct(Math.floor(10000 * (dataA[3] - dataA[2]) / dataA[2]) / 100) + '</td>';
 
             tbody += '<td>' + displayCode(row[1]) + '</td><td>' + dataB[0] + '</td><td>' + dataB[3] + '</td><td>' + displayPct(Math.floor(10000 * (dataB[3] - dataB[2]) / dataB[2]) / 100) + '</td>';
 
@@ -130,7 +143,9 @@ function render() {
 
             tbody += '<td>' + displayCode(row[2]) + '</td><td>' + dataM[0] + '</td><td>' + displayPct(zs_zhangfu) + '</td>';
 
-            tbody += '<td>' + jiage_ganggan + '</td><td>' + Math.floor(dataA[9] / 10000) + '</td><td>' + Math.floor(dataB[9] / 10000) + '</td>';
+            tbody += '<td>' + jiage_ganggan + '</td><td>' + jingzhi_ganggan + '</td><td>' + Math.floor(dataA[9] / 10000) + '</td><td>' + Math.floor(dataB[9] / 10000) + '</td>';
+
+            tbody += '<td>' + netB[2] + '</td>'
 
             tbody += '</tr>';
         });
