@@ -14,7 +14,7 @@
     <th>合并价</th>
     <th>净值估</th><th>合并溢</th>
     <th>JSL估</th><th>JSL溢</th>
-    <th>估算1</th><th>溢价1</th>
+    <!-- <th>估算1</th><th>溢价1</th> -->
     <th>母基</th><!-- <th>母鸡名称</th> --><th>母鸡净</th>
     <th>指数</th><th>指数名</th><th>指涨幅</th>
     <th>价杠杆</th><th>净杠杆</th><th>A成交</th><th>B成交</th>
@@ -131,6 +131,8 @@ function render() {
                 tbody += '<td>-</td><td>-</td>';
             }
 
+        // 不太准
+        if (0)
             var gs1 = getFundGS1Value(row[3]);
             if (! isNaN(gs1)) {
                 var yijia = Math.floor(10000 * (hb_price - gs1) / hb_price) / 100;
@@ -138,6 +140,7 @@ function render() {
             } else {
                 tbody += '<td>-</td><td>-</td>';
             }
+        }
 
             // <td>' + (dataF ? displayName(dataF[1]) : '') + '</td>
             tbody += '<td>' + row[3] + '</td><td>' + (dataF ? dataF[2] : '') + '</td>';
