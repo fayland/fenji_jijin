@@ -14,14 +14,12 @@ my $ua = LWP::UserAgent->new(
     cookie_jar => $cookie
 );
 
-# open(my $fh, '<', "$Bin/jisilu.cookie");
-# my $cookie = do {
-#     local $/; <$fh>;
-# };
-# close($fh);
-# $ua->default_header('Cookie', $cookie);
-
 while (1) {
+    my @d = localtime();
+    my $hour = $d[2];
+    exit if $hour < 9;
+    exit if $hour > 15;
+
     my $res = $ua->post('http://www.jisilu.cn/data/sfnew/arbitrage_vip_list/?__t=' . time(), [
         is_search => 1,
         "market[]" => ['sh', 'sz'],
@@ -31,7 +29,7 @@ while (1) {
 
     if (length($res->content)) {
         die unless $res->content =~ /fundA_id/;
-        open(my $fh, '>', "$Bin/jisilu.json");
+        open(my $fh, '>', "$Bin/../data/jisilu.json");
         print $fh $res->content;
         close($fh);
     } else {

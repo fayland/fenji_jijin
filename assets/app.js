@@ -1,65 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
-<meta http-equiv="X-UA-Compatible" content="Chrome=1,IE=edge" />
-</head>
-<body>
-
-<table id='data' border='1' width="112%">
-<thead>
-<tr>
-    <th>A代码</th> <!-- <th>A</th> --> <th>A价</th><th>A涨幅</th>
-    <th>B代码</th><th>B</th><th>B价</th><th>B涨幅</th><th>X涨幅</th> <!-- <th>Y涨幅</th> -->
-    <th>合并价</th>
-    <th>净值估</th><th>合并溢</th>
-    <th>JSL估</th><th>JSL溢</th>
-    <!-- <th>估算1</th><th>溢价1</th> -->
-    <th>母基</th><!-- <th>母鸡名称</th> --><th>母鸡净</th>
-    <th>指数</th><th>指数名</th><th>指涨幅</th>
-    <th>价杠杆</th><th>净杠杆</th><th>A成交</th><th>B成交</th>
-
-    <th>B净值</th>
-</tr>
-</thead>
-<tbody>
-
-</tbody>
-</table>
-
-<ul>
-    <li>X涨幅 - 抹平溢价后涨幅</li>
-    <!-- <li>Y涨幅 - 溢价不动，A不动，指数上涨1%可以涨</li> -->
-</ul>
-
-<script src="jquery.min.js"></script>
-<script>
-$.ajaxSetup({
-    cache: true
-});
+$.ajaxSetup({ cache: true });
 var jisilu_base_est_val = {};
-var list = [
-    ['sz150205', 'sz150206', 'sz399973', '160630'],
-    ['sz150221', 'sz150222', 'sz399959', '164402'],
-    ['sz150181', 'sz150182', 'sz399967', '161024'],
-    ['sz150186', 'sz150187', 'sz399967', '163115'],
-    ['sz150209', 'sz150210', 'sz399974', '161026'],
-    ['sz150085', 'sz150086', 'sz399005', '163111'],
-    ['sz150106', 'sz150107', 'sz399005', '161118'],
-    ['sz150152', 'sz150153', 'sz399006', '161022'],
-    ['sz150194', 'sz150195', 'sz399970', '161025'],
-    ['sz150179', 'sz150180', 'sz399935', '160626'],
-    ['sz150173', 'sz150174', 'sh000998', '165522'],
-    ['sz150203', 'sz150204', 'sz399971', '160629'],
-    ['sz150130', 'sz150131', 'sz399394', '160219'],
-    ['sz150196', 'sz150197', 'sz399395', '160221'],
-    ['sz150171', 'sz150172', 'sz399707', '163113'],
-    ['sz150315', 'sz150316', 'sz399803', '161031'],
-    ['sz150307', 'sz150308', 'sz399804', '161030'],
-    ['sz150211', 'sz150212', 'sz399976', '161028']
-];
 function render() {
-    var xxx = $.map(list, function(n){ return n; }); // flatten
+    var xxx = $.map(symbol_list, function(n){ return n; }); // flatten
     xxx = $.grep(xxx, function(n) {
         return (n.indexOf('sz') > -1 || n.indexOf('sh') > -1);
     });
@@ -67,7 +9,7 @@ function render() {
     var url = "http://hq.sinajs.cn/list=" + xxx.join(',');
     $.getScript( url, function() {
         var tbody = '';
-        $.each(list, function(i, row) {
+        $.each(symbol_list, function(i, row) {
             var xA = eval("hq_str_" + row[0]);
             var xB = eval("hq_str_" + row[1]);
             var xM = eval("hq_str_" + row[2]);
@@ -192,7 +134,7 @@ function getFundGS1Value(code) {
 }
 
 function setFundGS2value(code) {
-    $.getJSON('jisilu.json', function(data) {
+    $.getJSON('data/jisilu.json', function(data) {
         $.each(data.rows, function(i, v) {
             jisilu_base_est_val[v.cell.base_fund_id] = [v.cell.base_est_val, v.cell.est_dis_rt];
         });
@@ -226,14 +168,14 @@ $(document).ready(function() {
     if (hour >= 9 && hour <= 15) {
         console.log(hour);
         window.setInterval(render, 5000);
-        $.each(list, function(i, row) {
+        $.each(symbol_list, function(i, row) {
             var code = row[3];
             window.setInterval(function() {
                 setFundGS1value(code);
             }, 10000); // every 10 seconds
         });
     } else {
-        $.each(list, function(i, row) {
+        $.each(symbol_list, function(i, row) {
             var code = row[3];
             setFundGS1value(code);
         });
@@ -244,7 +186,3 @@ $(document).ready(function() {
         setFundGS2value();
     }, 10000);
 });
-</script>
-
-</body>
-</html>
