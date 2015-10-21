@@ -48,23 +48,6 @@ function render() {
 
             tbody += '<td>' + displayCode(row[1]) + '</td><td>' + dataB[0] + '</td><td>' + dataB[3] + '</td><td>' + displayPct(Math.floor(10000 * (dataB[3] - dataB[2]) / dataB[2]) / 100) + '</td>';
 
-            // 抹平溢价可以涨
-            if (! isNaN(jingzhi_gusuan)) {
-                // 2 * 母 - A VS 开盘价
-                var tmp = Math.floor( 10000 * ( (2 * jingzhi_gusuan - dataA[3]) - dataB[2] ) / dataB[2] ) / 100;
-                tbody += '<td>' + displayPct(tmp) + '</td>';
-            } else {
-                tbody += '<td>-</td>'
-            }
-
-            // 溢价不动，A不动，指数上涨1%可以涨
-            // if (! isNaN(jingzhi_gusuan)) {
-            //     var tmp = Math.floor( 10000 * (  ( jingzhi_gusuan * 2 * 1.01 * (1 + hebing_yijia * 0.01) - dataA[3] - dataB[3] ) / dataB[3] ) ) / 100;
-            //     tbody += '<td>' + displayPct(tmp) + '</td>';
-            // } else {
-            //     tbody += '<td>-</td>'
-            // }
-
             tbody += '<td>' + hb_price + '</td><td>' + jingzhi_gusuan + '</td><td>' + displayPct(hebing_yijia) + '</td>';
 
             if (row[3] in jisilu_base_est_val) {
@@ -96,7 +79,7 @@ function render() {
             tbody += '</tr>';
         });
 
-        $('#data > tbody').html(tbody);
+        $('#table_data > tbody').html(tbody);
     });
 }
 
@@ -185,4 +168,16 @@ $(document).ready(function() {
     window.setInterval(function() {
         setFundGS2value();
     }, 10000);
+
+    $.extend( true, $.fn.dataTable.defaults, {
+        "searching": false,
+        "paging": false,
+        "info": false
+    } );
+
+    $('#table_data').DataTable();
+
+    $('#index_change').load('data/index_change.html', function() {
+        $('#table_index_change').DataTable();
+    });
 });
