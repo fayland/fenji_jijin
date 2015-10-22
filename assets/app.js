@@ -61,7 +61,9 @@ function render() {
 
             tbody += '<td>' + row[3] + '</td><td>' + dataF + '</td>';
 
-            tbody += '<td>' + displayCode(row[2]) + '</td><td>' + dataM[0] + '</td><td>' + displayPct(zs_zhangfu) + '</td>';
+            // tbody += '<td>' + displayCode(row[2]) + '</td>';
+
+            tbody += '<td><span data-toggle="tooltip" data-placement="right" title="' + displayCode(row[2]) + '">' + dataM[0] + '</span></td><td>' + displayPct(zs_zhangfu) + '</td>';
 
             tbody += '<td>' + jiage_ganggan + '</td><td>' + jingzhi_ganggan + '</td><td>' + Math.floor(dataA[9] / 10000) + '</td><td>' + Math.floor(dataB[9] / 10000) + '</td>';
 
@@ -71,6 +73,7 @@ function render() {
         });
 
         $('#table_data > tbody').html(tbody);
+        $('[data-toggle="tooltip"]').tooltip();
     });
 }
 
