@@ -31,7 +31,12 @@ my $list = [
     ['sz150171', 'sz150172', 'sz399707', '163113'],
     ['sz150315', 'sz150316', 'sz399803', '161031'],
     ['sz150307', 'sz150308', 'sz399804', '161030'],
-    ['sz150211', 'sz150212', 'sz399976', '161028']
+    ['sz150211', 'sz150212', 'sz399976', '161028'],
+    ['sz150184', 'sz150185', 'sh000827', '163114'],
+    ['sz150051', 'sz150052', 'sz399300', '165515'],
+    ['sz150022', 'sz150023', 'sz399001', '163109'],
+    ['sz150227', 'sz150228', 'sz399986', '160631'],
+    ['sz150157', 'sz150158', 'sh000974', '165521']
 ];
 
 my $symbol_sth = $dbh->prepare("INSERT IGNORE INTO symbol (symbol, name, type, market) VALUES (?, ?, ?, ?)");
@@ -41,6 +46,9 @@ foreach my $row (@$list) {
     my $sb = $row->[1];
     my $sz = $row->[2];
     my $sf = $row->[3];
+
+    my ($is_done) = $dbh->selectrow_array("SELECT 1 FROM fenji_comb WHERE symbolF = ?", undef, $sf);
+    next if $is_done;
 
     my %name;
     foreach my $s ($sa, $sb, $sz) {

@@ -43,7 +43,9 @@ function render() {
                 jingzhi_ganggan = Math.floor( 1000 * (dataF / netB) * 2 ) / 1000; // A:B = 5:5
             }
 
-            tbody += '<tr><td>' + displayCode(row[0]) + '</td>';
+            tbody += '<tr>';
+
+            // tbody += '<td>' + displayCode(row[0]) + '</td>';
             // tbody += '<td>' + dataA[0] + '</td>';
             tbody += '<td>' + dataA[3] + '</td><td>' + displayPct(Math.floor(10000 * (dataA[3] - dataA[2]) / dataA[2]) / 100) + '</td>';
 
