@@ -104,7 +104,7 @@ while (my ($s, $n) = $sth->fetchrow_array) {
         print $fh qq~<thead><tr><th>Symbol</th>~;
         foreach my $i (1, 2, 3, 7, 30, 60, 90) {
             print $fh qq~<th>$i 日</th>~;
-            print $fh qq~<th>$i 日总</th>~;
+            print $fh qq~<th>$i 日总</th>~ if $i < 7;
         }
         print $fh qq~</tr></thead><tbody>\n~;
         $is_head_printed = 1;
@@ -116,7 +116,7 @@ while (my ($s, $n) = $sth->fetchrow_array) {
         my $total = $history[$i] ? sprintf('%.2f', ( 100 * ($history[0]->{close} - $history[$i]->{close}) / $history[$i]->{close} )) : '0';
 
         print $fh qq~<td>$curr%</td>~;
-        print $fh qq~<td>$total%</td>~;
+        print $fh qq~<td>$total%</td>~ if $i < 7;
     }
     print $fh qq~</tr>\n~;
 }
