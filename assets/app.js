@@ -1,6 +1,6 @@
 $.ajaxSetup({ cache: true });
 var fund_netvalue = {};
-var jisilu_base_est_val = {};
+var jisilu_data = {};
 function render() {
     var xxx = $.map(symbol_list, function(n){ return n; }); // flatten
     xxx = $.grep(xxx, function(n) {
@@ -53,8 +53,8 @@ function render() {
 
             tbody += '<td>' + hb_price + '</td><td>' + jingzhi_gusuan + '</td><td>' + displayPct(hebing_yijia) + '</td>';
 
-            if (row[3] in jisilu_base_est_val) {
-                tbody += '<td>' + jisilu_base_est_val[row[3]][0] + '</td><td>' + displayPct(jisilu_base_est_val[row[3]][1]) + '</td>';
+            if (row[3] in jisilu_data) {
+                tbody += '<td>' + jisilu_data[row[3]].base_est_val + '</td><td>' + displayPct(jisilu_data[row[3]].est_dis_rt) + '</td>';
             } else {
                 tbody += '<td>-</td><td>-</td>';
             }
@@ -99,7 +99,7 @@ function displayName(name) {
 function setFundGS2value(code) {
     $.getJSON('data/jisilu.json', function(data) {
         $.each(data.rows, function(i, v) {
-            jisilu_base_est_val[v.cell.base_fund_id] = [v.cell.base_est_val, v.cell.est_dis_rt];
+            jisilu_data[v.id] = v.cell;
         });
     });
 }
@@ -138,5 +138,13 @@ $(document).ready(function() {
             "paging": false,
             "info": false
         });
+    });
+    $('#jsl_data').load('data/jisilu.html', function() {
+        $('#table_jsl_data').DataTable({
+            "searching": false,
+            "paging": false,
+            "info": false
+        });
+        $('[data-toggle="tooltip"]').tooltip();
     });
 });

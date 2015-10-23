@@ -1,0 +1,38 @@
+<table id="table_jsl_data" class='table table-striped table-bordered'>
+<thead>
+    <tr>
+        <th>A</th><th>A X</th><th>X R</th><th>A Pct</th><th>A Val</th><th>A Vol</th>
+        <th>B</th><th>B NM</th><th>B Pct</th><th>B Val</th><th>B Vol</th><th>B New</th>
+        <th>Redeem</th><th>LOW</th><th>I</th><th>F</th><th>F Pct</th><th>F AR</th><th>F AF</th>
+    </tr>
+</thead>
+<tbody>
+    [% FOREACH cb IN combs %]
+        [% symbolF = cb.symbolF %]
+        [% dataF = data.$symbolF %]
+        [% symbolA = cb.symbolA %]
+        [% dA = dataA.$symbolA %]
+    <tr>
+        <td><span data-toggle="tooltip" data-placement="right" title="[% dataF.fundA_nm %]">[% cb.symbolA %]</span></td>
+        <td>[% dA.coupon_descr_s %]</td>
+        <td>[% dA.funda_profit_rt_next %]</td>
+        <td>[% dataF.priceA %]</td>
+        <td>[% dataF.fundA_nav %]</td>
+        <td>[% dataF.fundA_volume %]</td>
+        <td><span data-toggle="tooltip" data-placement="right" title="[% dataF.fundB_nm %]">[% cb.symbolB %]</span></td>
+        <td>[% dataF.fundB_nm %]</td>
+        <td>[% dataF.priceB %]</td>
+        <td>[% dataF.fundB_nav %]</td>
+        <td>[% dataF.fundB_volume %]</td>
+        <td>[% dataF.fundB_amount_increase %] [% dataF.fundB_amount_increase_rt %]</td>
+        <td>[% dataF.buy_redeem %]%</td>
+        <td>[% dA.funda_lower_recalc_rt %]</td>
+        <td><span data-toggle="tooltip" data-placement="right" title="[% dataF.index_nm %]">[% cb.symbolI %]</span></td>
+        <td><span data-toggle="tooltip" data-placement="right" title="[% dataF.base_fund_nm %]">[% cb.symbolF %]</span></td>
+        <td>[% dataF.base_nav %]</td>
+        <td>[% dataF.asset_ratio_num %]</td>
+        <td>[% dataF.apply_fee %]</td>
+    </tr>
+    [% END %]
+</tbody>
+</table>

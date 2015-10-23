@@ -6,6 +6,7 @@ use FindBin qw/$Bin/;
 use LWP::UserAgent;
 use HTTP::Cookies::ChromeMacOS;
 
+# use Chrome cookie
 my $cookie = HTTP::Cookies::ChromeMacOS->new();
 $cookie->load( $ENV{HOME} . "/Library/Application Support/Google/Chrome/Default/Cookies" );
 
@@ -17,8 +18,10 @@ my $ua = LWP::UserAgent->new(
 while (1) {
     my @d = localtime();
     my $hour = $d[2];
+    my $min  = $d[1];
     exit if $hour < 9;
     exit if $hour > 15;
+    exit if $hour == 15 and $min > 10;
 
     my $res = $ua->post('http://www.jisilu.cn/data/sfnew/arbitrage_vip_list/?__t=' . time(), [
         is_search => 1,
@@ -32,12 +35,16 @@ while (1) {
         open(my $fh, '>', "$Bin/../data/jisilu.json");
         print $fh $res->content;
         close($fh);
+
+        # random update
+        if (int(rand(100)) == 1) {
+            print `perl $Bin/../miner/jisilu.pl`;
+        }
     } else {
         die;
     }
 
     sleep 20;
 }
-
 
 1;
