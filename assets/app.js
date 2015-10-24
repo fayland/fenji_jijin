@@ -154,4 +154,11 @@ $(document).ready(function() {
             "info": false
         });
     });
+    $('#high_data').load('data/stock_high_data.html', function() {
+        $('#table_high_data').DataTable({
+            "searching": false,
+            "paging": false,
+            "info": false
+        });
+    });
 });
