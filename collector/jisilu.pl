@@ -16,13 +16,6 @@ my $ua = LWP::UserAgent->new(
 );
 
 while (1) {
-    my @d = localtime();
-    my $hour = $d[2];
-    my $min  = $d[1];
-    exit if $hour < 9;
-    exit if $hour > 15;
-    exit if $hour == 15 and $min > 10;
-
     my $res = $ua->post('http://www.jisilu.cn/data/sfnew/arbitrage_vip_list/?__t=' . time(), [
         is_search => 1,
         "market[]" => ['sh', 'sz'],
@@ -43,6 +36,14 @@ while (1) {
     } else {
         die;
     }
+
+    # at least run once
+    my @d = localtime();
+    my $hour = $d[2];
+    my $min  = $d[1];
+    exit if $hour < 9;
+    exit if $hour > 15;
+    exit if $hour == 15 and $min > 10;
 
     sleep 20;
 }

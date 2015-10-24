@@ -15,8 +15,8 @@ use JSON;
 my $ua = LWP::UserAgent->new;
 my $dbh = dbh();
 
-my @d = localtime();
-my $today = sprintf('%04d-%02d-%02d', $d[5] + 1900, $d[4] + 1, $d[3]);
+my @d = localtime( time() - 16 * 3600 ); # can 16 hours before now
+my $last_date = sprintf('%04d-%02d-%02d', $d[5] + 1900, $d[4] + 1, $d[3]);
 
 my $sth = $dbh->prepare("SELECT symbol FROM symbol WHERE type IN ('fund', 'fenjiA', 'fenjiB')");
 $sth->execute();
@@ -24,7 +24,7 @@ while (my ($s) = $sth->fetchrow_array) {
     my ($max_date) = $dbh->selectrow_array("
         SELECT MAX(date) FROM fund_history WHERE symbol = ?
     ", undef, $s);
-    next if ($max_date // '') eq $today;
+    next if ($max_date // '') eq $last_date;
 
     my $per_page = $max_date ? 20 : 100;
     my $url = "http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz&code=$s&page=1&per=$per_page&sdate=&edate=&rt=" . rand();
