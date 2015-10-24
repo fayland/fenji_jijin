@@ -1,0 +1,38 @@
+<table id="table_longhubang_data" class='table table-striped table-bordered'>
+<thead>
+    <tr>
+        <th>指数</th><th>B</th><th>Good</th><th>Eq</th><th>Bad</th>
+    </tr>
+</thead>
+<tbody>
+    [% FOREACH symbolI IN data.keys %]
+        [% symbolB = I_to_B.$symbolI %]
+        [% d = data.$symbolI %]
+    <tr>
+        <td>[% symbolI %] [% d.name %]</td>
+        <td>[% symbolB.symbol %] [% symbolB.name %]</td>
+        <td>
+            [% FOREACH x IN d.good %]
+                <b>[% x.symbol %] [% x.name %]</b> ([% x.ratio %])<br/>
+                [% x.p_change %]% [% x.buy_rmb_ratio %]% v [% x.sell_rmb_ratio %]%<br/>
+                [% x.reason %]<br/><br/>
+            [% END %]
+        </td>
+        <td>
+            [% FOREACH x IN d.eq %]
+                <b>[% x.symbol %] [% x.name %]</b> ([% x.ratio %])<br/>
+                [% x.p_change %]% [% x.buy_rmb_ratio %]% v [% x.sell_rmb_ratio %]%<br/>
+                [% x.reason %]<br/><br/>
+            [% END %]
+        </td>
+        <td>
+            [% FOREACH x IN d.bad %]
+                <b>[% x.symbol %] [% x.name %]</b> ([% x.ratio %])<br/>
+                [% x.p_change %]% [% x.buy_rmb_ratio %]% v [% x.sell_rmb_ratio %]%<br/>
+                [% x.reason %]<br/><br/>
+            [% END %]
+        </td>
+    </tr>
+    [% END %]
+</tbody>
+</table>

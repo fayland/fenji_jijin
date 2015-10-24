@@ -44,7 +44,7 @@ while (my $r = $sth->fetchrow_hashref) {
 }
 
 my $tt2 = Template->new({
-    INCLUDE_PATH => $Bin,
+    INCLUDE_PATH => "$Bin/templates",
     INTERPOLATE  => 1,               # expand "$var" in plain text
     POST_CHOMP   => 1,               # cleanup whitespace
 });

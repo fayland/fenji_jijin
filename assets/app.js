@@ -147,4 +147,11 @@ $(document).ready(function() {
         });
         $('[data-toggle="tooltip"]').tooltip();
     });
+    $('#longhubang_data').load('data/longhubang.html', function() {
+        $('#table_longhubang_data').DataTable({
+            "searching": false,
+            "paging": false,
+            "info": false
+        });
+    });
 });
