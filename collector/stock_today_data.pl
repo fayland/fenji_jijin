@@ -63,3 +63,5 @@ while (1) {
 
     sleep 5;
 }
+
+`perl $Bin/../miner/stock_high_data.pl`; # update
