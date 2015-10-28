@@ -132,8 +132,8 @@ $(document).ready(function() {
         setFundGS2value();
     }, 10000);
 
-    $('#index_change').load('data/index_change.html', function() {
-        $('#table_index_change').DataTable({
+    $('#index_history_data').load('data/index_history_data.html', function() {
+        $('#table_index_history_data').DataTable({
             "searching": false,
             "paging": false,
             "info": false

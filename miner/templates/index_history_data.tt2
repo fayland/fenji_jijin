@@ -1,0 +1,87 @@
+[% IF 0 %]<div id="index_history_chart" style="width: 95%; height: 300px"></div>[% END %]
+
+<table id="table_index_history_data" class='table table-striped table-bordered'>
+<thead>
+    <tr><th>Symbol</th>
+        [% FOREACH i IN [1, 2, 3, 6, 7, 8, 30, 60, 90] %]
+        <th>[% i %] 日</th>
+        [% IF i < 6 %]<th>[% i %] 日总</th>[% END %]
+        [% END %]
+    </tr>
+</thead>
+<tbody>
+    [% FOREACH row IN rows %]
+    <tr>
+        <td>[% row.symbol +%] ([%+ row.name %])</td>
+        [% FOREACH i IN [1, 2, 3, 6, 7, 8, 30, 60, 90] %]
+            [% curr = 0 %]
+            [% IF row.history.$i %]
+            [% j = i - 1 %]
+            [% curr = 100 * (row.history.$j.close - row.history.$i.close) / row.history.$i.close %]
+            [% curr = curr | format('%.2f') %]
+            [% END %]
+            [% total = 0 %]
+            [% IF row.history.$i %]
+            [% total = 100 * (row.history.0.close - row.history.$i.close) / row.history.$i.close %]
+            [% total = total | format('%.2f') %]
+            [% END %]
+            <td>[% curr %]%</td>
+            [% IF i < 6 %]<td>[% total %]%</td>[% END %]
+        [% END %]
+    </tr>
+    [% END %]
+</tbody>
+</table>
+
+[% IF 0 %]
+<script>
+$(document).ready(function() {
+    var seriesOptions = [
+        [% FOREACH row IN rows %]
+        {
+            'name': '[% row.name %]',
+            'data': [
+                [%+ FOREACH h IN row.history.slice(0, 20).reverse +%]
+                    [% tmparr = h.date.split('-') %]
+                    [ new Date([% tmparr.0 %], [% tmparr.1 %] - 1, [% tmparr.2 %]).getTime(), [% h.close %] ][% UNLESS loop.last %],[% END %]
+                [%+ END +%]
+            ]
+        }[% UNLESS loop.last %],[% END %]
+        [% END %]
+    ];
+
+    $('#index_history_chart').highcharts('StockChart', {
+
+        rangeSelector: {
+            selected: 4
+        },
+
+        yAxis: {
+            labels: {
+                formatter: function () {
+                    return (this.value > 0 ? ' + ' : '') + this.value + '%';
+                }
+            },
+            plotLines: [{
+                value: 0,
+                width: 2,
+                color: 'silver'
+            }]
+        },
+
+        plotOptions: {
+            series: {
+                compare: 'percent'
+            }
+        },
+
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+            valueDecimals: 2
+        },
+
+        series: seriesOptions
+    });
+});
+</script>
+[% END %]
