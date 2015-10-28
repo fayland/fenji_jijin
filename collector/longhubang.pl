@@ -31,7 +31,6 @@ my $dom = Mojo::DOM->new( encode('utf8', decode('gb2312', $res->content)) );
 my $date = $dom->at('input#notice_Ddl')->attr('value');
 $dbh->do("DELETE FROM longhubang WHERE date = ?", undef, $date);
 
-
 my $tbody = $dom->at('tbody');
 foreach my $tr ($tbody->find('tr.all')->each) {
     my @tds = $tr->find('td')->each;
