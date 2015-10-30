@@ -4,8 +4,8 @@
 <thead>
     <tr><th>Symbol</th>
         [% FOREACH i IN [1, 2, 3, 6, 7, 8, 30, 60, 90] %]
-        <th>[% i %] 日</th>
-        [% IF i < 6 %]<th>[% i %] 日总</th>[% END %]
+        [% IF i < 6 %]<th>[% i %] 日</th>[% END %]
+        [% IF i > 1 %]<th>[% i %] 日总</th>[% END %]
         [% END %]
     </tr>
 </thead>
@@ -25,8 +25,8 @@
             [% total = 100 * (row.history.0.close - row.history.$i.close) / row.history.$i.close %]
             [% total = total | format('%.2f') %]
             [% END %]
-            <td>[% curr %]%</td>
-            [% IF i < 6 %]<td>[% total %]%</td>[% END %]
+            [% IF i < 6 %]<td>[% curr %]%</td>[% END %]
+            [% IF i > 1 %]<td>[% total %]%</td>[% END %]
         [% END %]
     </tr>
     [% END %]

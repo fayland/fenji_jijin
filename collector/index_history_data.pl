@@ -84,3 +84,6 @@ while (my ($s, $market) = $sth->fetchrow_array) {
 
     sleep 5;
 }
+
+`perl $Bin/../miner/index_history_data.pl`;
+
