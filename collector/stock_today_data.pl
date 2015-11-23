@@ -37,7 +37,7 @@ while (1) {
         last if $row->{changepercent} < 8;
 
         $dbh->do("
-            INSERT INTO stock_high_data
+            INSERT IGNORE INTO stock_high_data
                 (
                     symbol, date, `open`, high, low, close, prev_close, p_change, is_highest,
                     turnover_ratio, volume, amount
