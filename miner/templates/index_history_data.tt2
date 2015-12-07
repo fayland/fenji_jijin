@@ -3,7 +3,7 @@
 <table id="table_index_history_data" class='table table-striped table-bordered'>
 <thead>
     <tr><th>Symbol</th>
-        [% FOREACH i IN [1, 2, 3, 6, 7, 8, 30, 60, 90] %]
+        [% FOREACH i IN [1, 2, 3, 4, 6, 7, 8, 30, 60, 90] %]
         [% IF i < 6 %]<th>[% i %] 日</th>[% END %]
         [% IF i > 1 %]<th>[% i %] 日总</th>[% END %]
         [% END %]
@@ -13,7 +13,7 @@
     [% FOREACH row IN rows %]
     <tr>
         <td>[% row.symbol +%] ([%+ row.name %])</td>
-        [% FOREACH i IN [1, 2, 3, 6, 7, 8, 30, 60, 90] %]
+        [% FOREACH i IN [1, 2, 3, 4, 6, 7, 8, 30, 60, 90] %]
             [% curr = 0 %]
             [% IF row.history.$i %]
             [% j = i - 1 %]
