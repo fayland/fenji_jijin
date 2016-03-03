@@ -47,6 +47,7 @@ while (my ($s, $market) = $sth->fetchrow_array) {
     # turnover:换手率[注：指数无此项]
 
     my $data = decode_json($res->decoded_content);
+    next unless ref $data->{record} eq 'ARRAY'; # BAD
     foreach my $row (@{$data->{record}}) {
         my ($date, $open, $high, $close, $low, $volume, $price_change, $p_change, $ma5, $ma10, $ma20, $v_ma5, $v_ma10, $v_ma20) = @$row;
         next unless $date =~ /^\d+/;

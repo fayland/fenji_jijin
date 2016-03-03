@@ -24,6 +24,7 @@ while (my ($s, $n) = $sth->fetchrow_array) {
     my $history_sth = $dbh->prepare("SELECT * FROM stock_history WHERE symbol = ? ORDER BY date DESC LIMIT 91");
     $history_sth->execute($s);
     while (my $h = $history_sth->fetchrow_hashref) { push @history, $h }
+    next unless @history;
 
     ## M25 均线
     my @h25 = @history[0..24];
