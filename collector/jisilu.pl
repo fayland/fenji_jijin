@@ -16,7 +16,7 @@ my $ua = LWP::UserAgent->new(
 );
 
 while (1) {
-    my $res = $ua->post('http://www.jisilu.cn/data/sfnew/arbitrage_vip_list/?__t=' . time(), [
+    my $res = $ua->post('https://www.jisilu.cn/data/sfnew/arbitrage_vip_list/?___t=' . time(), [
         is_search => 1,
         "market[]" => ['sh', 'sz'],
         'ptype' => 'price',
