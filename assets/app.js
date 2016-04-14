@@ -118,7 +118,6 @@ function getFundNetValue(code) {
 }
 
 function FundStock(b_id) {
-    console.log($('#fund_stock_' + b_id));
     var xxx = [];
     $('#fund_stock_' + b_id).find('[data-id]').each(function(){
         xxx.push($(this).attr('data-id'));
@@ -140,9 +139,8 @@ function FundStock(b_id) {
                 );
             }
         });
+        $('#fund_stock_' + b_id).modal('show');
     });
-
-    $('#fund_stock_' + b_id).modal('show');
 }
 
 $(document).ready(function() {
