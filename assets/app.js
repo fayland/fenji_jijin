@@ -161,4 +161,31 @@ $(document).ready(function() {
             "info": false
         });
     });
+    $('#fund_stock').load('data/fund_stock.html', function() {
+        $('#fund_stock_refresh').click(function() {
+            var xxx = [];
+            $('[data-id]').each(function(){
+                xxx.push($(this).attr('data-id'));
+            });
+            xxx = $.grep(xxx, function(n) {
+                return (n.indexOf('sz') > -1 || n.indexOf('sh') > -1);
+            });
+            xxx = $.unique(xxx);
+            var url = "http://hq.sinajs.cn/list=" + xxx.join(',');
+            $.getScript( url, function() {
+                $.each(xxx, function(i, v) {
+                    var x = eval("hq_str_" + v);
+                    var d = x.split(',');
+                    console.log(d);
+                    if (parseFloat(d[1]) == 0) {
+                        $('[data-id="' + v + '"]').text('-');
+                    } else {
+                        $('[data-id="' + v + '"]').html(
+                            displayPct(Math.floor(10000 * (d[3] - d[2]) / d[2]) / 100)
+                        );
+                    }
+                });
+            });
+       });
+    });
 });
