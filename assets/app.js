@@ -63,7 +63,7 @@ function render() {
 
             // tbody += '<td>' + displayCode(row[2]) + '</td>';
 
-            tbody += '<td><span data-toggle="tooltip" data-placement="right" title="' + displayCode(row[2]) + '">' + dataM[0] + '</span></td><td>' + displayPct(zs_zhangfu) + '</td>';
+            tbody += '<td><span data-toggle="tooltip" data-placement="right" title="' + displayCode(row[2]) + '" onclick="javascript: FundStock(\'' + row[1] + '\')">' + dataM[0] + '</span></td><td>' + displayPct(zs_zhangfu) + '</td>';
 
             tbody += '<td>' + jiage_ganggan + '</td><td>' + jingzhi_ganggan + '</td><td>' + Math.floor(dataA[9] / 10000) + '</td><td>' + Math.floor(dataB[9] / 10000) + '</td>';
 
@@ -117,6 +117,34 @@ function getFundNetValue(code) {
     return;
 }
 
+function FundStock(b_id) {
+    console.log($('#fund_stock_' + b_id));
+    var xxx = [];
+    $('#fund_stock_' + b_id).find('[data-id]').each(function(){
+        xxx.push($(this).attr('data-id'));
+    });
+    xxx = $.grep(xxx, function(n) {
+        return (n.indexOf('sz') > -1 || n.indexOf('sh') > -1);
+    });
+    xxx = $.unique(xxx);
+    var url = "http://hq.sinajs.cn/list=" + xxx.join(',');
+    $.getScript( url, function() {
+        $.each(xxx, function(i, v) {
+            var x = eval("hq_str_" + v);
+            var d = x.split(',');
+            if (parseFloat(d[1]) == 0) {
+                $('[data-id="' + v + '"]').text('-');
+            } else {
+                $('[data-id="' + v + '"]').html(
+                    displayPct(Math.floor(10000 * (d[3] - d[2]) / d[2]) / 100)
+                );
+            }
+        });
+    });
+
+    $('#fund_stock_' + b_id).modal('show');
+}
+
 $(document).ready(function() {
     render();
 
@@ -161,31 +189,11 @@ $(document).ready(function() {
             "info": false
         });
     });
-    $('#fund_stock').load('data/fund_stock.html', function() {
-        $('#fund_stock_refresh').click(function() {
-            var xxx = [];
-            $('[data-id]').each(function(){
-                xxx.push($(this).attr('data-id'));
-            });
-            xxx = $.grep(xxx, function(n) {
-                return (n.indexOf('sz') > -1 || n.indexOf('sh') > -1);
-            });
-            xxx = $.unique(xxx);
-            var url = "http://hq.sinajs.cn/list=" + xxx.join(',');
-            $.getScript( url, function() {
-                $.each(xxx, function(i, v) {
-                    var x = eval("hq_str_" + v);
-                    var d = x.split(',');
-                    console.log(d);
-                    if (parseFloat(d[1]) == 0) {
-                        $('[data-id="' + v + '"]').text('-');
-                    } else {
-                        $('[data-id="' + v + '"]').html(
-                            displayPct(Math.floor(10000 * (d[3] - d[2]) / d[2]) / 100)
-                        );
-                    }
-                });
-            });
-       });
+
+    // for modal
+    $.ajax({
+        url: "data/fund_stock.html",
+        success: function (data) { $('body').append(data); },
+        dataType: 'html'
     });
 });

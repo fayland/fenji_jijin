@@ -1,19 +1,14 @@
-<div class="row" style="margin: 5px">
-    <button type="button" class="btn btn-primary" id="fund_stock_refresh">Refresh</button>
-</div>
-
-<div class="row" style="margin: 5px">
 [% FOREACH comb IN combs %]
 
-  <div class='col-md-4' id="fund_stock_[% comb.b_id %]">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                [% comb.b_name %] (<span data-id="[% comb.b_sid %]"></span>) - [% comb.i_name %] (<span data-id="[% comb.i_sid %]"></span>)
-            </h3>
-        </div>
-        <div class="panel-body">
-            <table class="table table-striped">
+<div class="modal fade" tabindex="-1" role="dialog" id="fund_stock_[% comb.b_sid %]">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">[% comb.b_name %] (<span data-id="[% comb.b_sid %]"></span>) - [% comb.i_name %] (<span data-id="[% comb.i_sid %]"></span>)</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
             <thead>
             <tr><th>ID</th><th>Name</th><th>Pct</th><th>Ratio</th></tr>
             </thead>
@@ -27,14 +22,10 @@
                 </tr>
                 [% END %]
             </tbody>
-            </table>
-        </div>
+        </table>
+      </div>
     </div>
   </div>
-
-  [% IF loop.count MOD 3 == 0 %]
-  </div><div class="row" style="margin: 5px">
-  [% END %]
+</div>
 
 [% END %]
-</div>
