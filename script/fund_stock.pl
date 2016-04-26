@@ -33,6 +33,8 @@ while (my ($fund_id) = $sth->fetchrow_array) {
     # ", undef, $fund_id);
     # next if $was_done;
 
+    next if $fund_id eq '161826';
+
     say "# on $fund_id";
     my $url_part = ($fund_id eq '161826') ? 'detail_fund_bonds' : 'detail_fund_stocks';
     my $res = $ua->post("https://www.jisilu.cn/data/lof/$url_part/$fund_id?___t=" . time(), [
@@ -53,4 +55,4 @@ while (my ($fund_id) = $sth->fetchrow_array) {
     sleep 10;
 }
 
-
+`perl $Bin/../miner/fund_stock.pl`;
