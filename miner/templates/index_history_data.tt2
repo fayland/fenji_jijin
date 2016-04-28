@@ -3,7 +3,9 @@
 <table id="table_index_history_data" class='table table-striped table-bordered'>
 <thead>
     <tr><th>Symbol</th>
-        <th>BIAS25</th><th>MA5/MA30</th>
+        <th>BIAS25</th>
+        <th>BIAS20</th>
+        [% IF 0 %]<th>MA5/MA30</th>[% END %]
         [% FOREACH i IN [1, 2, 3, 4, 6, 7, 8, 30, 60, 90] %]
         [% IF i < 3 %]<th>[% i %] 日</th>[% END %]
         [% IF i > 1 %]<th>[% i %] 日总</th>[% END %]
@@ -15,7 +17,8 @@
     <tr>
         <td>[% row.symbol +%] ([%+ row.name %])</td>
         <td>[% row.BIAS25 %]%</td>
-        <td>[% row.MA5_30 %]%</td>
+        <td>[% row.BIAS20 %]</td>
+        [% IF 0 %]<td>[% row.MA5_30 %]%</td>[% END %]
         [% FOREACH i IN [1, 2, 3, 4, 6, 7, 8, 30, 60, 90] %]
             [% curr = 0 %]
             [% IF row.history.$i %]
