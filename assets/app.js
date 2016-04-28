@@ -162,7 +162,8 @@ $(document).ready(function() {
         $('#table_index_history_data').DataTable({
             "searching": false,
             "paging": false,
-            "info": false
+            "info": false,
+            "order": [[ 1, "desc" ]]
         });
     });
     $('#jsl_data').load('data/jisilu.html', function() {
