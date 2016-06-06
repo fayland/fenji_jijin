@@ -2,31 +2,27 @@
 
 use strict;
 use warnings;
+use v5.10;
 use FindBin qw/$Bin/;
-use LWP::UserAgent;
-use HTTP::Cookies::ChromeMacOS;
+use Mojo::UserAgent;
+use Mojo::UserAgent::CookieJar::ChromeMacOS;
 
-# use Chrome cookie
-my $cookie = HTTP::Cookies::ChromeMacOS->new();
-$cookie->load( $ENV{HOME} . "/Library/Application Support/Google/Chrome/Default/Cookies" );
-
-my $ua = LWP::UserAgent->new(
-    agent => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.66 Safari/537.36',
-    cookie_jar => $cookie
-);
+my $ua = Mojo::UserAgent->new;
+$ua->transactor->name('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.63 Safari/537.36');
+$ua->cookie_jar(Mojo::UserAgent::CookieJar::ChromeMacOS->new);
 
 while (1) {
-    my $res = $ua->post('https://www.jisilu.cn/data/sfnew/arbitrage_vip_list/?___t=' . time(), [
+    my $tx = $ua->post('https://www.jisilu.cn/data/sfnew/arbitrage_vip_list/?___t=' . time() => form => {
         is_search => 1,
         "market[]" => ['sh', 'sz'],
         'ptype' => 'price',
         rp => '50',
-    ]);
+    });
 
-    if (length($res->content)) {
-        die unless $res->content =~ /fundA_id/;
+    if (length($tx->res->body)) {
+        die unless $tx->res->body =~ /fundA_id/;
         open(my $fh, '>', "$Bin/../data/jisilu.json");
-        print $fh $res->content;
+        print $fh $tx->res->body;
         close($fh);
 
         # random update
