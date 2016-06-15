@@ -3,24 +3,17 @@
 use strict;
 use warnings;
 use v5.10;
-use LWP::UserAgent;
-use HTTP::Cookies::ChromeMacOS;
 use FindBin qw/$Bin/;
 use lib "$Bin/../lib";
 use Win qw/dbh/;
 use Data::Dumper;
 use Encode;
-use HTTP::Cookies::ChromeMacOS;
-use JSON;
+use Mojo::UserAgent;
+use Mojo::UserAgent::CookieJar::ChromeMacOS;
 
-# use Chrome cookie
-my $cookie = HTTP::Cookies::ChromeMacOS->new();
-$cookie->load( $ENV{HOME} . "/Library/Application Support/Google/Chrome/Default/Cookies" );
-
-my $ua = LWP::UserAgent->new(
-    agent => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.66 Safari/537.36',
-    cookie_jar => $cookie
-);
+my $ua = Mojo::UserAgent->new;
+$ua->transactor->name('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.63 Safari/537.36');
+$ua->cookie_jar(Mojo::UserAgent::CookieJar::ChromeMacOS->new);
 
 my $dbh = dbh();
 
@@ -37,13 +30,13 @@ while (my ($fund_id) = $sth->fetchrow_array) {
 
     say "# on $fund_id";
     my $url_part = ($fund_id eq '161826') ? 'detail_fund_bonds' : 'detail_fund_stocks';
-    my $res = $ua->post("https://www.jisilu.cn/data/lof/$url_part/$fund_id?___t=" . time(), [
+    my $tx = $ua->post("https://www.jisilu.cn/data/lof/$url_part/$fund_id?___t=" . time() => form => {
         is_search => 1,
         fund_id => $fund_id,
         rp => 50,
         page => 1
-    ]);
-    my $data = decode_json($res->content);
+    });
+    my $data = $tx->res->json;
     # print Dumper(\$data);
     $dbh->do("DELETE FROM fund_stock WHERE fund_id = ?", undef, $fund_id);
     foreach my $row (@{$data->{rows}}) {

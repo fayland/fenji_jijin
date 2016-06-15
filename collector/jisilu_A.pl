@@ -3,31 +3,26 @@
 use strict;
 use warnings;
 use FindBin qw/$Bin/;
-use LWP::UserAgent;
-use HTTP::Cookies::ChromeMacOS;
+use Mojo::UserAgent;
+use Mojo::UserAgent::CookieJar::ChromeMacOS;
 
-# use Chrome cookie
-my $cookie = HTTP::Cookies::ChromeMacOS->new();
-$cookie->load( $ENV{HOME} . "/Library/Application Support/Google/Chrome/Default/Cookies" );
+my $ua = Mojo::UserAgent->new;
+$ua->transactor->name('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.63 Safari/537.36');
+$ua->cookie_jar(Mojo::UserAgent::CookieJar::ChromeMacOS->new);
 
-my $ua = LWP::UserAgent->new(
-    agent => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.124 Safari/537.36',
-    cookie_jar => $cookie
-);
-
-my $res = $ua->post('http://www.jisilu.cn/data/sfnew/funda_list/?___t=' . time(), [
+my $tx = $ua->post('https://www.jisilu.cn/data/sfnew/funda_list/?___t=' . time() => form => {
     is_funda_search => 1,
     fundavolume => '',
     maturity => '',
     "market[]" => ['sh', 'sz'],
     "coupon_descr[]" => ['+3.0%', '+3.2%', '+3.5%', '+4.0%', 'other'],
     rp => '50',
-]);
+});
 
-if (length($res->content)) {
-    die unless $res->content =~ /funda_id/;
+if (length($tx->res->body)) {
+    die unless $tx->res->body =~ /funda_id/;
     open(my $fh, '>', "$Bin/../data/jisilu_A.json");
-    print $fh $res->content;
+    print $fh $tx->res->body;
     close($fh);
 } else {
     die;
