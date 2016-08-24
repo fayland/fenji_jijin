@@ -17,7 +17,7 @@ my $dbh = dbh();
 my @d = localtime( time() - 15 * 3600 ); # can 15 hours before now
 my $today = sprintf('%04d-%02d-%02d', $d[5] + 1900, $d[4] + 1, $d[3]);
 
-my $sth = $dbh->prepare("SELECT symbol, market FROM symbol WHERE type IN ('index', 'fenjiA', 'fenjiB')");
+my $sth = $dbh->prepare("SELECT symbol, market FROM symbol WHERE type IN ('index')"); # , 'fenjiA', 'fenjiB'
 $sth->execute();
 while (my ($s, $market) = $sth->fetchrow_array) {
     my ($max_date) = $dbh->selectrow_array("
@@ -87,4 +87,4 @@ while (my ($s, $market) = $sth->fetchrow_array) {
 }
 
 `perl $Bin/../miner/index_history_data.pl`;
-
+`perl $Bin/../miner/analysis_index_history.pl`;

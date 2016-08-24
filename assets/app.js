@@ -166,6 +166,14 @@ $(document).ready(function() {
             "order": [[ 1, "desc" ]]
         });
     });
+    $('#analysis_index_history').load('data/analysis_index_history.html', function() {
+        $('#table_analysis_index_history').DataTable({
+            "searching": false,
+            "paging": false,
+            "info": false,
+            "order": [[ 2, "desc" ]]
+        });
+    });
     $('#jsl_data').load('data/jisilu.html', function() {
         $('#table_jsl_data').DataTable({
             "searching": false,
