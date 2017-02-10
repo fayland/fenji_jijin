@@ -7,6 +7,8 @@ use FindBin qw/$Bin/;
 use Mojo::UserAgent;
 use Mojo::UserAgent::CookieJar::ChromeMacOS;
 
+$| = 1; # flush
+
 my $ua = Mojo::UserAgent->new;
 $ua->transactor->name('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.63 Safari/537.36');
 $ua->cookie_jar(Mojo::UserAgent::CookieJar::ChromeMacOS->new);
@@ -17,6 +19,7 @@ while (1) {
         "market[]" => ['sh', 'sz'],
         'ptype' => 'price',
         rp => '50',
+        page => 1,
     });
 
     if (length($tx->res->body)) {
@@ -24,6 +27,8 @@ while (1) {
         open(my $fh, '>', "$Bin/../data/jisilu.json");
         print $fh $tx->res->body;
         close($fh);
+
+        # say Dumper(\$tx->res->json); use Data::Dumper;
 
         # random update
         if (int(rand(100)) == 1) {
