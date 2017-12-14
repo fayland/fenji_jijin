@@ -61,6 +61,8 @@ my $list = [
 
     ['sz150331', 'sz150332', 'sz399805', '165315'], # 网金融
     ['sz150269', 'sz150270', 'sz399997', '161725'], # 白酒
+
+    ['sz150028', 'sz150029', 'sz399905', '165511'], # 中证500
 ];
 
 my $symbol_sth = $dbh->prepare("INSERT IGNORE INTO symbol (symbol, name, type, market) VALUES (?, ?, ?, ?)");
