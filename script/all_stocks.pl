@@ -21,7 +21,7 @@ my $insert_sth = $dbh->prepare("INSERT IGNORE INTO stock (symbol, name, market) 
 
 my $file = "$Bin/../data/csv/all.csv";
 unless (-e $file) {
-    my $url = "http://218.244.146.57/static/all.csv";
+    my $url = "http://file.tushare.org/tsdata/201801/all.csv";
     say "# get $url";
     $ua->get($url, ':content_file' => $file);
 }

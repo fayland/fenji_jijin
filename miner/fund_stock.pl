@@ -33,6 +33,7 @@ while (my $r = $sth->fetchrow_hashref) {
     while (my ($s, $ratio) = $fund_stock_sth->fetchrow_array) {
         $get_symbol_name->execute($s);
         my ($s_name, $market) = $get_symbol_name->fetchrow_array;
+        # say "$s, $s_name, $market";
         push @zc, {
             id => $s,
             sid => $market . $s,
