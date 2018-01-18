@@ -17,7 +17,7 @@ my $dbh = dbh();
 mkdir("$Bin/../data/xls") unless -d "$Bin/../data/xls";
 
 my $select_sth = $dbh->prepare("SELECT symbol FROM stock WHERE name = ?");
-my $insert_sth = $dbh->prepare("INSERT INTO index_stock (symbolI, symbolS, ratio) VALUES (?, ?, ?)");
+my $insert_sth = $dbh->prepare("INSERT IGNORE INTO index_stock (symbolI, symbolS, ratio) VALUES (?, ?, ?)");
 
 my $sth = $dbh->prepare("SELECT symbol FROM symbol WHERE type = 'index'");
 $sth->execute();
@@ -33,7 +33,7 @@ sub csindex { # 中证
     my $file = "$Bin/../data/xls/${s}cons.xls";
     return 1 if -e $file;
     my $url_s = $s eq '399300' ? '000300' : $s;
-    my $url = "ftp://115.29.204.48/webdata/" . $url_s . "cons.xls";
+    my $url = "http://www.csindex.com.cn/uploads/file/autofile/cons/" . $url_s . "cons.xls";
     say "# get $url";
     my $res = $ua->get($url, ':content_file' => $file);
     sleep 5;
