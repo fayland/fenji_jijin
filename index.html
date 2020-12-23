@@ -1,65 +1,153 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
-<meta http-equiv="X-UA-Compatible" content="Chrome=1,IE=edge" />
-<link rel="stylesheet" href="assets/vendor/bootstrap.min.css" />
-<link rel="stylesheet" href="assets/vendor/dataTables.bootstrap.min.css" />
-
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+    <meta http-equiv="X-UA-Compatible" content="Chrome=1,IE=edge" />
+    <link rel="stylesheet" href="assets/vendor/bootstrap.min.css" />
 </head>
 <body>
 
-<div>
-  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#data" aria-controls="data" role="tab" data-toggle="tab">当前数据</a></li>
-    <li role="presentation"><a href="#index_history_data" aria-controls="index_history_data" role="tab" data-toggle="tab">指数历史数据</a></li>
-    <li role="presentation"><a href="#analysis_index_history" aria-controls="analysis_index_history" role="tab" data-toggle="tab">指数历史分析</a></li>
-    <li role="presentation"><a href="#jsl_data" aria-controls="jsl_data" role="tab" data-toggle="tab">JSL 数据</a></li>
-    <li role="presentation"><a href="#longhubang_data" aria-controls="longhubang_data" role="tab" data-toggle="tab">龙虎榜分析</a></li>
-    <li role="presentation"><a href="#high_data" aria-controls="high_data" role="tab" data-toggle="tab">大涨数据</a></li>
-  </ul>
-  </ul>
-
-  <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="data">
-
-<table id='table_data' class="table">
-<thead>
-<tr>
-    <!-- <th>A代码</th> <th>A</th> --> <th>A价</th><th>A涨幅</th>
-    <th>B代码</th><th>B</th><th>B价</th><th>B涨幅</th>
-    <th>合并价</th>
-    <th>净值估</th><th>合并溢</th>
-    <th>JSL估</th><th>JSL溢</th>
-    <!-- <th>估算1</th><th>溢价1</th> -->
-    <th>母基</th><!-- <th>母鸡名称</th> --><th>母鸡净</th>
-    <!-- <th>指数</th> --> <th>指数名</th><th>指涨幅</th>
-    <th>价杠杆</th><th>净杠杆</th><th>A成交</th><th>B成交</th>
-
-    <th>B净值</th>
-</tr>
-</thead>
-<tbody>
-
-</tbody>
-</table>
-
-    </div>
-    <div role="tabpanel" class="tab-pane" id="index_history_data"></div>
-    <div role="tabpanel" class="tab-pane" id="analysis_index_history"></div>
-    <div role="tabpanel" class="tab-pane" id="jsl_data"></div>
-    <div role="tabpanel" class="tab-pane" id="longhubang_data"></div>
-    <div role="tabpanel" class="tab-pane" id="high_data"></div>
-  </div>
+<div class="container">
+    <div id="summary" class="row"></div>
+    <div id="details"></div>
 </div>
 
 <script src="assets/vendor/jquery-1.11.3.min.js"></script>
-<script src="assets/vendor/jquery.dataTables.min.js"></script>
-<script src="assets/vendor/dataTables.bootstrap.min.js"></script>
 <script src="assets/vendor/bootstrap.min.js"></script>
-<script src="assets/vendor/highstock/highstock.js"></script>
-<script src="assets/symbol_list.js"></script>
-<script src="assets/app.js"></script>
+<script src="data/fund_stock.js"></script>
+<script>
+$.ajaxSetup({ cache: true });
+var symbol_list = [
+    ['sz150315', 'sz150316', 'sz399803', '161031'],
+    ['sz150152', 'sz150153', 'sz399006', '161022'],
+    ['sz150213', 'sz150214', 'sz399958', '161223'],
+    ['sz150303', 'sz150304', 'sz399673', '160420'], //  创业股B
 
+    // ['sz150331', 'sz150332', 'sz399805', '165315'], // 网金融
+    ['sz150194', 'sz150195', 'sz399970', '161025'],
+    ['sz150179', 'sz150180', 'sz399935', '160626'],
+    ['sz150231', 'sz150232', 'sz399811', '163116'],
+    ['sz150173', 'sz150174', 'sh000998', '165522'],
+    ['sz150203', 'sz150204', 'sz399971', '160629'], // 传媒B
+
+    ['sz150307', 'sz150308', 'sz399804', '161030'],
+    ['sz150211', 'sz150212', 'sz399976', '161028'],
+    ['sz150217', 'sz150218', 'sz399412', '164905'], // 新能源
+
+    ['sz150171', 'sz150172', 'sz399707', '163113'],
+    ['sz150200', 'sz150201', 'sz399975', '161720'],
+    // ['sz150223', 'sz150224', 'sz399975', '161027'],
+    // ['sz150235', 'sz150236', 'sz399975', '160633'],
+
+    ['sz150205', 'sz150206', 'sz399973', '160630'],
+    ['sz150221', 'sz150222', 'sz399959', '164402'],
+    // ['sz150181', 'sz150182', 'sz399967', '161024'], // 中小板
+    ['sz150186', 'sz150187', 'sz399967', '163115'],
+    ['sz150209', 'sz150210', 'sz399974', '161026'],
+    ['sz150085', 'sz150086', 'sz399005', '163111'],
+    // ['sz150106', 'sz150107', 'sz399005', '161118'],
+
+    ['sz150196', 'sz150197', 'sz399395', '160221'],
+
+    ['sz150184', 'sz150185', 'sh000827', '163114'],
+    ['sz150051', 'sz150052', 'sz399300', '165515'],
+    ['sz150028', 'sz150029', 'sz399905', '165511'], // 中证500
+
+    ['sz150022', 'sz150023', 'sz399001', '163109'],
+    ['sz150018', 'sz150019', 'sz399004', '161812'],
+    ['sz150227', 'sz150228', 'sz399986', '160631'],
+    ['sz150177', 'sz150178', 'sz399966', '160625'],
+    // ['sz150157', 'sz150158', 'sh000974', '165521'], // 金融B
+    // ['sz150277', 'sz150278', 'sz399807', '160639'],
+    ['sz150130', 'sz150131', 'sz399394', '160219'],
+    ['sz150198', 'sz150199', 'sz399396', '160222'],
+    ['sz150269', 'sz150270', 'sz399997', '161725'], // 白酒
+    ['sz150117', 'sz150118', 'sz399393', '160218']  // 房地产
+];
+
+function buildHTML() {
+    // first summary one for all
+    var sT = '<table class="table"><tr>';
+    $.each(symbol_list, function (i, row) {
+        sT += '<td data-nm="' + row[2] + '"></td>';
+        sT += '<td data-zf="' + row[2] + '"></td>';
+        if (i > 1 && (i + 1) % 5 == 0) sT += "</tr><tr>";
+    });
+    sT += "</tr></table>";
+    $('#summary').append(sT);
+
+    sT = '<div class="row">';
+    $.each(symbol_list, function (i, row) {
+        sT += '<div class="col-md-3"><h4>' + row[2] + ' - <span data-nm="' + row[2] + '"></span> (<span data-zf="' + row[2] + '"></span>)</h4><table class="table table-striped"><thead><tr><th>ID</th><th>Name</th><th>Pct</th><th>Ratio</th></tr></thead><tbody>';
+        var ofs = fund_stock[row[3]];
+        $.each(ofs, function(j, es) {
+            var esid = es.id;
+            if (esid[0] == '0' || esid[0] == '3') {
+                esid = 'sz' + esid;
+            } else if (esid[0] == '6') {
+                esid = 'sh' + esid;
+            } else {
+                console.log("unknown: " + esid);
+            }
+            sT += '<tr><td>' + es.id + '</td><td data-nm="' + esid + '"></td><td data-zf="' + esid + '"></td><td>' + es.ratio + '%</td></tr>';
+        });
+        sT += '</tbody></table></div>';
+
+        if (i > 1 && (i + 1) % 4 == 0) sT += '</div><div class="row">';
+    });
+    sT += '</div>'
+    $('#details').append(sT);
+}
+
+function render(symbols) {
+    var url = "http://hq.sinajs.cn/list=" + symbols.join(',');
+    $.getScript(url, function () {
+        $.each(symbols, function (i, v) {
+            var xM = eval("hq_str_" + v);
+            var dataM = xM.split(',');
+
+            var zf = Math.floor(10000 * (dataM[3] - dataM[2]) / dataM[2]) / 100; // 指数涨幅
+            var nm = dataM[0];
+
+            $('[data-nm="' + v + '"]').text(nm);
+            $('[data-zf="' + v + '"]').html(displayPct(zf));
+        });
+    });
+}
+
+$(document).ready(function () {
+    buildHTML();
+    var symbols = [];
+    $('[data-nm]').each(function(i, v) {
+        symbols.push($(this).attr('data-nm'));
+    });
+    console.log(symbols);
+    symbols = $.grep(symbols, function (n) {
+        return (n.indexOf('sz') > -1 || n.indexOf('sh') > -1);
+    });
+    symbols = $.unique(symbols);
+    var update = function() { render(symbols); };
+    update();
+
+    var hour = (new Date()).getHours();
+    if (hour >= 9 && hour < 15) {
+        console.log(hour);
+        window.setInterval(update, 5000);
+    }
+});
+
+function displayPct(pct) {
+    if (pct == '-') return '-';
+    pct = parseFloat(pct.toString().replace('%', ''));
+    if (pct > 0) {
+        return '<span style="color:red">' + pct + '%</span>';
+    } else if (pct < 0) {
+        return '<span style="color:green">' + pct + '%</span>';
+    } else {
+        return pct + '%';
+    }
+}
+
+</script>
 </body>
 </html>

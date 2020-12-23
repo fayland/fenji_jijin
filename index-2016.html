@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+<meta http-equiv="X-UA-Compatible" content="Chrome=1,IE=edge" />
+<link rel="stylesheet" href="assets/vendor/bootstrap.min.css" />
+<link rel="stylesheet" href="assets/vendor/dataTables.bootstrap.min.css" />
+
+</head>
+<body>
+
+<div>
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#data" aria-controls="data" role="tab" data-toggle="tab">当前数据</a></li>
+    <li role="presentation"><a href="#index_history_data" aria-controls="index_history_data" role="tab" data-toggle="tab">指数历史数据</a></li>
+    <li role="presentation"><a href="#analysis_index_history" aria-controls="analysis_index_history" role="tab" data-toggle="tab">指数历史分析</a></li>
+    <li role="presentation"><a href="#jsl_data" aria-controls="jsl_data" role="tab" data-toggle="tab">JSL 数据</a></li>
+    <li role="presentation"><a href="#longhubang_data" aria-controls="longhubang_data" role="tab" data-toggle="tab">龙虎榜分析</a></li>
+    <li role="presentation"><a href="#high_data" aria-controls="high_data" role="tab" data-toggle="tab">大涨数据</a></li>
+  </ul>
+  </ul>
+
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="data">
+
+<table id='table_data' class="table">
+<thead>
+<tr>
+    <!-- <th>A代码</th> <th>A</th> --> <th>A价</th><th>A涨幅</th>
+    <th>B代码</th><th>B</th><th>B价</th><th>B涨幅</th>
+    <th>合并价</th>
+    <th>净值估</th><th>合并溢</th>
+    <th>JSL估</th><th>JSL溢</th>
+    <!-- <th>估算1</th><th>溢价1</th> -->
+    <th>母基</th><!-- <th>母鸡名称</th> --><th>母鸡净</th>
+    <!-- <th>指数</th> --> <th>指数名</th><th>指涨幅</th>
+    <th>价杠杆</th><th>净杠杆</th><th>A成交</th><th>B成交</th>
+
+    <th>B净值</th>
+</tr>
+</thead>
+<tbody>
+
+</tbody>
+</table>
+
+    </div>
+    <div role="tabpanel" class="tab-pane" id="index_history_data"></div>
+    <div role="tabpanel" class="tab-pane" id="analysis_index_history"></div>
+    <div role="tabpanel" class="tab-pane" id="jsl_data"></div>
+    <div role="tabpanel" class="tab-pane" id="longhubang_data"></div>
+    <div role="tabpanel" class="tab-pane" id="high_data"></div>
+  </div>
+</div>
+
+<script src="assets/vendor/jquery-1.11.3.min.js"></script>
+<script src="assets/vendor/jquery.dataTables.min.js"></script>
+<script src="assets/vendor/dataTables.bootstrap.min.js"></script>
+<script src="assets/vendor/bootstrap.min.js"></script>
+<script src="assets/vendor/highstock/highstock.js"></script>
+<script src="assets/symbol_list.js"></script>
+<script src="assets/app.js"></script>
+
+</body>
+</html>
