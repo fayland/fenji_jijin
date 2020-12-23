@@ -18,6 +18,11 @@
 <script>
 $.ajaxSetup({ cache: true });
 var symbol_list = [
+    ['sz150269', 'sz150270', 'sz399997', '161725'], // 白酒
+    ['sz150130', 'sz150131', 'sz399394', '160219'], // 医药
+    ['sz150051', 'sz150052', 'sz399300', '165515'], // 300
+    ['sz150022', 'sz150023', 'sz399001', '163109'], // 深证成指
+
     ['sz150315', 'sz150316', 'sz399803', '161031'],
     ['sz150152', 'sz150153', 'sz399006', '161022'],
     ['sz150213', 'sz150214', 'sz399958', '161223'],
@@ -50,18 +55,14 @@ var symbol_list = [
     ['sz150196', 'sz150197', 'sz399395', '160221'],
 
     ['sz150184', 'sz150185', 'sh000827', '163114'],
-    ['sz150051', 'sz150052', 'sz399300', '165515'],
     ['sz150028', 'sz150029', 'sz399905', '165511'], // 中证500
 
-    ['sz150022', 'sz150023', 'sz399001', '163109'],
     ['sz150018', 'sz150019', 'sz399004', '161812'],
     ['sz150227', 'sz150228', 'sz399986', '160631'],
     ['sz150177', 'sz150178', 'sz399966', '160625'],
     // ['sz150157', 'sz150158', 'sh000974', '165521'], // 金融B
     // ['sz150277', 'sz150278', 'sz399807', '160639'],
-    ['sz150130', 'sz150131', 'sz399394', '160219'],
     ['sz150198', 'sz150199', 'sz399396', '160222'],
-    ['sz150269', 'sz150270', 'sz399997', '161725'], // 白酒
     ['sz150117', 'sz150118', 'sz399393', '160218']  // 房地产
 ];
 
@@ -78,7 +79,7 @@ function buildHTML() {
 
     sT = '<div class="row">';
     $.each(symbol_list, function (i, row) {
-        sT += '<div class="col-md-3"><h4>' + row[2] + ' - <span data-nm="' + row[2] + '"></span> (<span data-zf="' + row[2] + '"></span>)</h4><table class="table table-striped"><thead><tr><th>ID</th><th>Name</th><th>Pct</th><th>Ratio</th></tr></thead><tbody>';
+        sT += '<div class="col-md-3"><h4>' + row[2] + ' - <span data-nm="' + row[2] + '"></span> (<span data-zf="' + row[2] + '"></span>)</h4><table class="table table-striped"><thead><tr><th>Name</th><th>Pct</th><th>Ratio</th></tr></thead><tbody>';
         var ofs = fund_stock[row[3]];
         $.each(ofs, function(j, es) {
             var esid = es.id;
@@ -89,7 +90,8 @@ function buildHTML() {
             } else {
                 console.log("unknown: " + esid);
             }
-            sT += '<tr><td>' + es.id + '</td><td data-nm="' + esid + '"></td><td data-zf="' + esid + '"></td><td>' + es.ratio + '%</td></tr>';
+            //  data-toggle="tooltip" title="' + es.id + '"
+            sT += '<tr><td data-nm="' + esid + '"></td><td data-zf="' + esid + '"></td><td>' + es.ratio + '%</td></tr>';
         });
         sT += '</tbody></table></div>';
 
@@ -97,6 +99,7 @@ function buildHTML() {
     });
     sT += '</div>'
     $('#details').append(sT);
+    // $('[data-toggle="tooltip"]').tooltip();
 }
 
 function render(symbols) {
@@ -121,7 +124,6 @@ $(document).ready(function () {
     $('[data-nm]').each(function(i, v) {
         symbols.push($(this).attr('data-nm'));
     });
-    console.log(symbols);
     symbols = $.grep(symbols, function (n) {
         return (n.indexOf('sz') > -1 || n.indexOf('sh') > -1);
     });
