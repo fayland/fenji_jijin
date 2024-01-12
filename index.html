@@ -103,14 +103,14 @@ function buildHTML() {
 }
 
 function render(symbols) {
-    var url = "http://hq.sinajs.cn/list=" + symbols.join(',');
+    var url = "http://qt.gtimg.cn/q=" + symbols.join(',');
     $.getScript(url, function () {
         $.each(symbols, function (i, v) {
-            var xM = eval("hq_str_" + v);
-            var dataM = xM.split(',');
+            var xM = eval("v_" + v);
+            var dataM = xM.split('~');
 
-            var zf = Math.floor(10000 * (dataM[3] - dataM[2]) / dataM[2]) / 100; // 指数涨幅
-            var nm = dataM[0];
+            var zf = Math.floor(10000 * (dataM[3] - dataM[4]) / dataM[4]) / 100; // 指数涨幅
+            var nm = dataM[1];
 
             $('[data-nm="' + v + '"]').text(nm);
             $('[data-zf="' + v + '"]').html(displayPct(zf));
